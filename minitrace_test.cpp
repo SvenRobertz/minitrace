@@ -53,13 +53,18 @@ int main() {
 	MTR_STEP("background", "long_running", &long_running_thing_1, "middle step");
 	usleep(80000);
 	MTR_END("main", "outer");
+	MTR_INSTANT("main", "an instant");
 	MTR_COUNTER("main", "greebles", 0);
 
 	usleep(10000);
 	a();
 
 	usleep(50000);
-	MTR_INSTANT("main", "the end");
+	MTR_SINSTANT("main", "the end");
+	usleep(10000);
+	MTR_SINSTANT_C("main", "the end", "value", "A char constant");
+	usleep(10000);
+	MTR_SINSTANT_I("main", "the end", "value", 1742);
 	usleep(10000);
 	MTR_FINISH("background", "long_running", &long_running_thing_1);
 	MTR_FINISH("background", "long_running", &long_running_thing_2);

@@ -344,9 +344,11 @@ void mtr_flush_with_state(int is_last) {
 		}
 #endif
 
-		len = snprintf(linebuf, ARRAY_SIZE(linebuf), "%s{\"cat\":\"%s\",\"pid\":%i,\"tid\":%i,\"ts\":%" PRId64 ",\"ph\":\"%c\",\"name\":\"%s\",\"args\":{%s}%s}",
+		len = snprintf(linebuf, ARRAY_SIZE(linebuf), "%s{\"cat\":\"%s\",\"pid\":%i,\"tid\":%i,\"ts\":%" PRId64 ",\"ph\":\"%c\",\"name\":\"%s\",%s\"args\":{%s}%s}",
 				first_line ? "" : ",\n",
-				cat, raw->pid, raw->tid, raw->ts - time_offset, raw->ph, raw->name, arg_buf, id_buf);
+				cat, raw->pid, raw->tid, raw->ts - time_offset, raw->ph, raw->name,
+                (raw->ph == 'i')? "\"s\":\"g\",":"",
+                arg_buf, id_buf);
 		fwrite(linebuf, 1, len, f);
 		first_line = 0;
 
@@ -413,7 +415,7 @@ void internal_mtr_raw_event(const char *category, const char *name, char ph, voi
 		memcpy(&x, id, sizeof(double));
 		ev->ts = (int64_t)(x * 1000000);
 		ev->a_double = (ts - x) * 1000000;
-	} else {
+    } else {
 		ev->ts = (int64_t)(ts * 1000000);
 	}
 	ev->tid = cur_thread_id;
