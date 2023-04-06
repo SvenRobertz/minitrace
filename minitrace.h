@@ -123,6 +123,7 @@ void internal_mtr_raw_event_arg(const char *category, const char *name, char ph,
 #define MTR_BEGIN1(c, n, val) internal_mtr_raw_event_arg(c, n, 'B', 0, val)
 #define MTR_SINSTANT1(c, n, val) internal_mtr_raw_event_arg(c, n, 'i', 0, val)
 #define MTR_INSTANT1(c, n, val) internal_mtr_raw_event_arg(c, n, 'I', 0, val)
+#define MTR_COUNTER1(c, n, val) internal_mtr_raw_event_arg(c, n, 'C', 0, val)
 
 // Note that it's fine to match BEGIN_S with END and BEGIN with END_S, etc.
 #define MTR_BEGIN_C(c, n, aname, astrval) internal_mtr_raw_event_arg(c, n, 'B', 0, MTR_ARG_TYPE_STRING_CONST, aname, (void *)(astrval))
@@ -176,6 +177,7 @@ void internal_mtr_raw_event_arg(const char *category, const char *name, char ph,
 #define MTR_BEGIN1(c, n, val)
 #define MTR_SINSTANT1(c, n, val)
 #define MTR_INSTANT1(c, n, val)
+#define MTR_COUNTER1(c, n, val)
 
 #define MTR_BEGIN_C(c, n, aname, astrval)
 #define MTR_END_C(c, n, aname, astrval)

@@ -69,11 +69,14 @@ int main() {
 	usleep(100000);
 	MTR_END("main", "foo");
 	usleep(50000);
+	MTR_COUNTER1("main", "greebles", MTR_ARG_I("greebles", 100));
+	usleep(50000);
 	MTR_SINSTANT("main", "the end");
 	usleep(10000);
 	MTR_SINSTANT_C("main", "the end", "value", "A char constant");
 	usleep(10000);
 	MTR_SINSTANT_I("main", "the end", "value", 1742);
+	MTR_COUNTER1("main", "greebles", MTR_ARG_I("greebles", 5));
 	usleep(10000);
 	MTR_FINISH("background", "long_running", &long_running_thing_1);
 	MTR_FINISH("background", "long_running", &long_running_thing_2);
