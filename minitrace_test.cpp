@@ -43,6 +43,8 @@ int main() {
 	MTR_COUNTER("main", "greebles", 3);
 	MTR_BEGIN("main", "outer");
 	usleep(80000);
+	MTR_BEGIN1("main", "foo", MTR_ARG_I("value", 42));
+	usleep(80000);
 	for (i = 0; i < 3; i++) {
 		MTR_BEGIN("main", "inner");
 		usleep(40000);
@@ -50,15 +52,22 @@ int main() {
 		usleep(10000);
 		MTR_COUNTER("main", "greebles", 3 * i + 10);
 	}
+	MTR_END("main", "foo");
 	MTR_STEP("background", "long_running", &long_running_thing_1, "middle step");
+	usleep(80000);
+	MTR_SINSTANT1("background", "long_running",  MTR_ARG_C("string val", "Something happened!"));
+	usleep(80000);
+	MTR_INSTANT1("background", "long_running",  MTR_ARG_I("int val", 223344));
 	usleep(80000);
 	MTR_END("main", "outer");
 	MTR_INSTANT("main", "an instant");
 	MTR_COUNTER("main", "greebles", 0);
 
+	MTR_BEGIN1("main", "foo", MTR_ARG_C("message", "hello"));
 	usleep(10000);
 	a();
-
+	usleep(100000);
+	MTR_END("main", "foo");
 	usleep(50000);
 	MTR_SINSTANT("main", "the end");
 	usleep(10000);

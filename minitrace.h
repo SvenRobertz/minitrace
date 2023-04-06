@@ -116,6 +116,14 @@ void internal_mtr_raw_event_arg(const char *category, const char *name, char ph,
 // _S will copy the string, freeing on flush (expensive but sometimes necessary).
 // but required if the string was generated dynamically.
 
+#define MTR_ARG_C(aname, astrval) MTR_ARG_TYPE_STRING_CONST, aname, (void*)(astrval)
+#define MTR_ARG_S(aname, astrval) MTR_ARG_TYPE_STRING_COPY, aname, (void*)(astrval)
+#define MTR_ARG_I(aname, aintval) MTR_ARG_TYPE_INT, aname, (void*)(aintval)
+
+#define MTR_BEGIN1(c, n, val) internal_mtr_raw_event_arg(c, n, 'B', 0, val)
+#define MTR_SINSTANT1(c, n, val) internal_mtr_raw_event_arg(c, n, 'i', 0, val)
+#define MTR_INSTANT1(c, n, val) internal_mtr_raw_event_arg(c, n, 'I', 0, val)
+
 // Note that it's fine to match BEGIN_S with END and BEGIN with END_S, etc.
 #define MTR_BEGIN_C(c, n, aname, astrval) internal_mtr_raw_event_arg(c, n, 'B', 0, MTR_ARG_TYPE_STRING_CONST, aname, (void *)(astrval))
 #define MTR_END_C(c, n, aname, astrval) internal_mtr_raw_event_arg(c, n, 'E', 0, MTR_ARG_TYPE_STRING_CONST, aname, (void *)(astrval))
@@ -160,6 +168,14 @@ void internal_mtr_raw_event_arg(const char *category, const char *name, char ph,
 #define MTR_FLOW_FINISH(c, n, id)
 #define MTR_INSTANT(c, n)
 #define MTR_SINSTANT(c, n)
+
+#define MTR_ARG_C(aname, astrval)
+#define MTR_ARG_S(aname, astrval)
+#define MTR_ARG_I(aname, aintval)
+
+#define MTR_BEGIN1(c, n, val)
+#define MTR_SINSTANT1(c, n, val)
+#define MTR_INSTANT1(c, n, val)
 
 #define MTR_BEGIN_C(c, n, aname, astrval)
 #define MTR_END_C(c, n, aname, astrval)
