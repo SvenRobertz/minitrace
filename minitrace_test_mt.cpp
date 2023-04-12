@@ -40,7 +40,7 @@ void phase2() {
 
 int main() {
 	int i;
-	mtr_init("mt_trace.json");
+	mtr_init("trace.json", INTERNAL_MINITRACE_BUFFER_SIZE);
 	MTR_META_PROCESS_NAME("Multithreaded Test");
 	MTR_META_THREAD_NAME("Main Thread");
 	MTR_BEGIN_FUNC();

@@ -22,6 +22,7 @@
 #define MINITRACE_H
 
 #include <inttypes.h>
+#include <stddef.h>
 
 // If MTR_ENABLED is not defined, Minitrace does nothing and has near zero overhead.
 // Preferably, set this flag in your build system. If you can't just uncomment this line.
@@ -32,17 +33,25 @@
 // occasionally. It's safe...ish.
 #define INTERNAL_MINITRACE_BUFFER_SIZE 1000000
 
+// Return codes for init functions
+#define MTR_SUCCESS        0
+#define MTR_FAILURE_MALLOC 1
+#define MTR_FAILURE_FILE   2
+#define MTR_FAILURE_MUTEX  3
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Initializes Minitrace. Must be called very early during startup of your executable,
 // before any MTR_ statements.
-void mtr_init(const char *json_file);
+// Returns non-zero on error
+int mtr_init(const char *json_file, size_t bufsz);
 // Same as above, but allows passing in a custom stream (FILE *), as returned by
 // fopen(). It should be opened for writing, preferably in binary mode to avoid
 // processing of line endings (i.e. the "wb" mode).
-void mtr_init_from_stream(void *stream);
+// Returns non-zero on error
+int mtr_init_from_stream(void *stream, size_t bufsz);
 
 // Shuts down minitrace cleanly, flushing the trace buffer.
 void mtr_shutdown(void);

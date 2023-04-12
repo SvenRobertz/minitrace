@@ -169,28 +169,56 @@ void mtr_register_sigint_handler() {
 
 #endif
 
-void mtr_init_from_stream(void *stream) {
+int mtr_init_from_stream(void *stream, size_t bufsz) {
 #ifndef MTR_ENABLED
-	return;
+	return 0;
 #endif
-	event_buffer = (raw_event_t *)malloc(INTERNAL_MINITRACE_BUFFER_SIZE * sizeof(raw_event_t));
-	flush_buffer = (raw_event_t *)malloc(INTERNAL_MINITRACE_BUFFER_SIZE * sizeof(raw_event_t));
+        int result=MTR_SUCCESS;
+	event_buffer = (raw_event_t *)malloc(bufsz * sizeof(raw_event_t));
+        if(!event_buffer) {
+            result = MTR_FAILURE_MALLOC;
+            goto end;
+        }
+	flush_buffer = (raw_event_t *)malloc(bufsz * sizeof(raw_event_t));
+        if(!flush_buffer) {
+            result = MTR_FAILURE_MALLOC;
+            goto end;
+        }
 	is_tracing = 1;
 	event_count = 0;
 	f = (FILE *)stream;
 	const char *header = "{\"traceEvents\":[\n";
-	fwrite(header, 1, strlen(header), f);
+	size_t n = fwrite(header, 1, strlen(header), f);
+        if(n == 0) {
+            result = MTR_FAILURE_FILE;
+            goto end;
+        }
 	time_offset = (uint64_t)(mtr_time_s() * 1000000);
 	first_line = 1;
-	pthread_mutex_init(&mutex, 0);
-	pthread_mutex_init(&event_mutex, 0);
+	int mr1 = pthread_mutex_init(&mutex, 0);
+        if(mr1) {
+            result = MTR_FAILURE_MUTEX;
+            goto end;
+        }
+	int mr2 = pthread_mutex_init(&event_mutex, 0);
+        if(mr2) {
+            result = MTR_FAILURE_MUTEX;
+            goto end;
+        }
+end:
+        return result;
 }
 
-void mtr_init(const char *json_file) {
+int mtr_init(const char *json_file, size_t bufsz) {
 #ifndef MTR_ENABLED
-	return;
+	return 0;
 #endif
-	mtr_init_from_stream(fopen(json_file, "wb"));
+        FILE* f = fopen(json_file, "wb");
+        if(!f){
+            return MTR_FAILURE_FILE;
+        } else {
+            return mtr_init_from_stream(f, bufsz);
+        }
 }
 
 void mtr_shutdown() {

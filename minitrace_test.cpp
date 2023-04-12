@@ -28,7 +28,7 @@ void a() {
 
 int main() {
 	int i;
-	mtr_init("trace.json");
+	mtr_init("trace.json", INTERNAL_MINITRACE_BUFFER_SIZE);
 	mtr_register_sigint_handler();
 
 	MTR_META_PROCESS_NAME("minitrace_test");
